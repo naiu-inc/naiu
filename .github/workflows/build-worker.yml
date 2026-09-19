@@ -1,1 +1,48 @@
+name: Build RunPod worker image
 
+# Builds the ~33 GB HunyuanVideo worker image and pushes it to GHCR.
+# RunPod then deploys from the prebuilt image (no 30-min build cap on RunPod's side).
+
+on:
+  workflow_dispatch:        # lets you run it manually from the Actions tab
+  push:
+    paths:
+      - "runpod-worker/Dockerfile"
+      - ".github/workflows/build-worker.yml"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write       # needed to push to GHCR
+    steps:
+      # The image is huge; reclaim ~30 GB from the runner first.
+      - name: Free disk space
+        uses: jlumbroso/free-disk-space@main
+        with:
+          tool-cache: true
+          android: true
+          dotnet: true
+          haskell: true
+          large-packages: true
+          swap-storage: true
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          # No COPY in the Dockerfile, so build context doesn't matter — only the Dockerfile path.
+          context: runpod-worker
+          file: runpod-worker/Dockerfile
+          push: true
+          tags: ghcr.io/naiu-inc/naiu-worker:v1
