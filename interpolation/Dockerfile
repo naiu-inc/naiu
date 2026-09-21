@@ -10,6 +10,22 @@
 FROM runpod/worker-comfyui:5.10.0-base
 
 WORKDIR /comfyui
+
+# --- Video encoding: give PyAV a real H.264 encoder (libx264) ---
+# ComfyUI's SaveVideo encodes MP4/H.264 via the `av` (PyAV) library. The pip `av`
+# wheel ships an LGPL ffmpeg WITHOUT libx264, so SaveVideo fails with:
+#   avcodec_open2("libx264") -> Generic error in an external library
+# Install a full ffmpeg (with libx264) + dev headers, then rebuild the SAME av
+# version from source so it links against this ffmpeg and gains libx264.
+RUN apt-get update && apt-get install -y --no-install-recommends \
+      ffmpeg \
+      libavformat-dev libavcodec-dev libavdevice-dev libavutil-dev \
+      libavfilter-dev libswscale-dev libswresample-dev \
+      pkg-config build-essential \
+    && rm -rf /var/lib/apt/lists/*
+RUN AV_VER=$(/opt/venv/bin/pip show av | awk '/^Version:/{print $2}') && \
+    /opt/venv/bin/pip install --force-reinstall --no-binary av "av==${AV_VER}"
+
 RUN mkdir -p models/frame_interpolation models/upscale_models
 
 # --- Frame interpolation model (FILM, 69 MB) -> models/frame_interpolation/ ---
