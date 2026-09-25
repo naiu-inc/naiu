@@ -1,0 +1,399 @@
+{
+  "92": {
+    "inputs": {
+      "image": "Gemini_Generated_Image_1u9hn91u9hn91u9h.jpg"
+    },
+    "class_type": "LoadImage",
+    "_meta": {
+      "title": "Load Image"
+    }
+  },
+  "96": {
+    "inputs": {
+      "compare_view": {
+        "beforeImages": [
+          "/api/view?filename=comfy.compare.a_temp_esjgq_00001_.png&subfolder=&type=temp&rand=0.33996547806466526"
+        ],
+        "afterImages": [
+          "/api/view?filename=comfy.compare.b_temp_esjgq_00001_.png&subfolder=&type=temp&rand=0.33996547806466526"
+        ]
+      },
+      "image_a": [
+        "92",
+        0
+      ],
+      "image_b": [
+        "85:39",
+        0
+      ]
+    },
+    "class_type": "ImageCompare",
+    "_meta": {
+      "title": "Compare Images"
+    }
+  },
+  "97": {
+    "inputs": {
+      "filename_prefix": "upscaled_by_supir",
+      "images": [
+        "85:39",
+        0
+      ]
+    },
+    "class_type": "SaveImage",
+    "_meta": {
+      "title": "Save Image"
+    }
+  },
+  "85:62": {
+    "inputs": {
+      "strength_start": 0.97,
+      "strength_end": 0.87,
+      "restore_cfg": 4,
+      "restore_cfg_s_tmin": 0.05,
+      "model": [
+        "85:1",
+        0
+      ],
+      "model_patch": [
+        "85:3",
+        0
+      ],
+      "vae": [
+        "85:1",
+        2
+      ],
+      "image": [
+        "85:94",
+        0
+      ]
+    },
+    "class_type": "SUPIRApply",
+    "_meta": {
+      "title": "SUPIRApply"
+    }
+  },
+  "85:20": {
+    "inputs": {
+      "add_noise": true,
+      "noise_seed": 402244474214267,
+      "cfg": 1,
+      "model": [
+        "85:62",
+        0
+      ],
+      "positive": [
+        "85:59",
+        0
+      ],
+      "negative": [
+        "85:60",
+        0
+      ],
+      "sampler": [
+        "85:76",
+        0
+      ],
+      "sigmas": [
+        "85:29",
+        0
+      ],
+      "latent_image": [
+        "85:57",
+        0
+      ]
+    },
+    "class_type": "SamplerCustom",
+    "_meta": {
+      "title": "SamplerCustom"
+    }
+  },
+  "85:11": {
+    "inputs": {
+      "samples": [
+        "85:20",
+        0
+      ],
+      "vae": [
+        "85:1",
+        2
+      ]
+    },
+    "class_type": "VAEDecode",
+    "_meta": {
+      "title": "VAE Decode"
+    }
+  },
+  "85:1": {
+    "inputs": {
+      "ckpt_name": "juggernautXL_v9Rdphoto2Lightning.safetensors"
+    },
+    "class_type": "CheckpointLoaderSimple",
+    "_meta": {
+      "title": "Load Checkpoint"
+    }
+  },
+  "85:59": {
+    "inputs": {
+      "width": 1024,
+      "height": 1024,
+      "crop_w": 0,
+      "crop_h": 0,
+      "target_width": 1024,
+      "target_height": 1024,
+      "text_g": [
+        "85:88",
+        0
+      ],
+      "text_l": [
+        "85:88",
+        0
+      ],
+      "clip": [
+        "85:1",
+        1
+      ]
+    },
+    "class_type": "CLIPTextEncodeSDXL",
+    "_meta": {
+      "title": "CLIP Text Encode (SDXL)"
+    }
+  },
+  "85:60": {
+    "inputs": {
+      "width": 1024,
+      "height": 1024,
+      "crop_w": 0,
+      "crop_h": 0,
+      "target_width": 1024,
+      "target_height": 1024,
+      "text_g": [
+        "85:73",
+        0
+      ],
+      "text_l": [
+        "85:73",
+        0
+      ],
+      "clip": [
+        "85:1",
+        1
+      ]
+    },
+    "class_type": "CLIPTextEncodeSDXL",
+    "_meta": {
+      "title": "CLIP Text Encode (SDXL)"
+    }
+  },
+  "85:57": {
+    "inputs": {
+      "width": [
+        "85:58",
+        0
+      ],
+      "height": [
+        "85:58",
+        1
+      ],
+      "batch_size": 1
+    },
+    "class_type": "EmptyLatentImage",
+    "_meta": {
+      "title": "Empty Latent Image"
+    }
+  },
+  "85:73": {
+    "inputs": {
+      "value": ""
+    },
+    "class_type": "PrimitiveStringMultiline",
+    "_meta": {
+      "title": "Text (Multiline)"
+    }
+  },
+  "85:39": {
+    "inputs": {
+      "method": "mkl_lab",
+      "source_stats": "per_frame",
+      "strength": 1,
+      "image_target": [
+        "85:11",
+        0
+      ],
+      "image_ref": [
+        "85:94",
+        0
+      ]
+    },
+    "class_type": "ColorTransfer",
+    "_meta": {
+      "title": "Transfer Color"
+    }
+  },
+  "85:71": {
+    "inputs": {
+      "value": ""
+    },
+    "class_type": "PrimitiveStringMultiline",
+    "_meta": {
+      "title": "Text (Multiline)"
+    }
+  },
+  "85:3": {
+    "inputs": {
+      "name": "SUPIR-v0Q_fp16.safetensors"
+    },
+    "class_type": "ModelPatchLoader",
+    "_meta": {
+      "title": "Load Model Patch"
+    }
+  },
+  "85:58": {
+    "inputs": {
+      "image": [
+        "85:94",
+        0
+      ]
+    },
+    "class_type": "GetImageSize",
+    "_meta": {
+      "title": "Get Image Size"
+    }
+  },
+  "85:76": {
+    "inputs": {
+      "sampler_name": "dpmpp_2m_sde"
+    },
+    "class_type": "KSamplerSelect",
+    "_meta": {
+      "title": "KSamplerSelect"
+    }
+  },
+  "85:29": {
+    "inputs": {
+      "scheduler": "sgm_uniform",
+      "steps": 10,
+      "denoise": 0.92,
+      "model": [
+        "85:62",
+        0
+      ]
+    },
+    "class_type": "BasicScheduler",
+    "_meta": {
+      "title": "BasicScheduler"
+    }
+  },
+  "85:86": {
+    "inputs": {
+      "clip_name": "qwen3.5_4b_bf16.safetensors",
+      "type": "stable_diffusion",
+      "device": "default"
+    },
+    "class_type": "CLIPLoader",
+    "_meta": {
+      "title": "Load CLIP"
+    }
+  },
+  "85:87": {
+    "inputs": {
+      "prompt": [
+        "85:91",
+        0
+      ],
+      "max_length": 2048,
+      "sampling_mode": "on",
+      "sampling_mode.temperature": 0.7,
+      "sampling_mode.top_k": 64,
+      "sampling_mode.top_p": 0.95,
+      "sampling_mode.min_p": 0.05,
+      "sampling_mode.repetition_penalty": 1.05,
+      "sampling_mode.seed": 0,
+      "sampling_mode.presence_penalty": 0,
+      "thinking": false,
+      "use_default_template": true,
+      "clip": [
+        "85:86",
+        0
+      ],
+      "image": [
+        "92",
+        0
+      ]
+    },
+    "class_type": "TextGenerate",
+    "_meta": {
+      "title": "Generate Text"
+    }
+  },
+  "85:88": {
+    "inputs": {
+      "switch": [
+        "85:90",
+        0
+      ],
+      "on_false": [
+        "85:71",
+        0
+      ],
+      "on_true": [
+        "85:87",
+        0
+      ]
+    },
+    "class_type": "ComfySwitchNode",
+    "_meta": {
+      "title": "If/Else Switch"
+    }
+  },
+  "85:89": {
+    "inputs": {
+      "source": [
+        "85:88",
+        0
+      ]
+    },
+    "class_type": "PreviewAny",
+    "_meta": {
+      "title": "Preview as Text"
+    }
+  },
+  "85:90": {
+    "inputs": {
+      "value": true
+    },
+    "class_type": "BOOLConstant",
+    "_meta": {
+      "title": "enable_image_captioning"
+    }
+  },
+  "85:91": {
+    "inputs": {
+      "string_a": "Describe the scene concisely in English, using vivid, descriptive keywords and phrases suitable for AI image generation (SDXL). Focus only on visual elements, composition, lighting, style, and atmosphere. Do not include extra explanations or instructions.",
+      "string_b": [
+        "85:71",
+        0
+      ],
+      "delimiter": ""
+    },
+    "class_type": "StringConcatenate",
+    "_meta": {
+      "title": "Concatenate Text"
+    }
+  },
+  "85:94": {
+    "inputs": {
+      "resize_type": "scale total pixels",
+      "resize_type.megapixels": 13.5,
+      "scale_method": "lanczos",
+      "input": [
+        "92",
+        0
+      ]
+    },
+    "class_type": "ResizeImageMaskNode",
+    "_meta": {
+      "title": "Resize Image/Mask"
+    }
+  }
+}
