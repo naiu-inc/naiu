@@ -1,0 +1,49 @@
+name: Build SUPIR upscale worker image
+
+# Builds the SUPIR image-upscale worker (~20 GB with baked models) and pushes it
+# to GHCR. RunPod then deploys from the prebuilt image (avoids the 30-min build cap
+# on RunPod's own builder). Separate from the HunyuanVideo worker image.
+
+on:
+  workflow_dispatch:        # run manually from the Actions tab
+  push:
+    paths:
+      - "runpod-worker/upscale/Dockerfile"
+      - ".github/workflows/build-upscale.yml"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write       # needed to push to GHCR
+    steps:
+      # The image is large; reclaim ~30 GB from the runner first.
+      - name: Free disk space
+        uses: jlumbroso/free-disk-space@main
+        with:
+          tool-cache: true
+          android: true
+          dotnet: true
+          haskell: true
+          large-packages: true
+          swap-storage: true
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          # No COPY in the Dockerfile, so build context doesn't matter — only the Dockerfile path.
+          context: runpod-worker/upscale
+          file: runpod-worker/upscale/Dockerfile
+          push: true
+          tags: ghcr.io/naiu-inc/naiu-upscale-worker:v1
